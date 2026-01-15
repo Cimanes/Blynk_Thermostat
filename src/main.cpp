@@ -26,11 +26,11 @@
 //--------------------------------------------
 
 #include "0_Global_Config.h"    // Options and globals
-#ifdef remote_enable
-  #include <Blynk/BlynkTimer.h>   // Use BlynkTimer when Blynk is enabled
-#else
-  #include <SimpleTimer.h>        // Use SimpleTimer when Blynk is not enabled
-#endif
+// #ifdef remote_enable
+//   #include <Blynk/BlynkTimer.h>   // Use BlynkTimer when Blynk is enabled
+// #else
+//   #include <SimpleTimer.h>        // Use SimpleTimer when Blynk is not enabled
+// #endif
 
 #include "1_Timers.h"        // Define timers.
 

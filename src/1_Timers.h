@@ -12,6 +12,22 @@
 //--------------------------------------------
 //  Timers
 //--------------------------------------------
+/*
+* Functions:
+* SimpleTimer()       --> constructor to create the object
+* setInterval(d, f)   --> Call function "f" periodically, every "d" ms. // d is "long".
+* setTimeout(d, f)    --> Call function "f" only ONCE after "d" milliseconds. // d is "long"  // "f" is void().
+* setTimer(d, f, n)   --> Call function "f" every "d" milliseconds for "n" times.
+* enable(t_xxx)       --> Enables that timer.
+* disable(t_xxx)      --> Disables that timer.
+* toggle(t_xxx)       --> Toggles status of that timer (enable / disable).
+* restartTimer(t_xxx) --> The timer starts counting from now, although the corresponding function has not been triggered (Watchdog...).
+* deleteTimer(t_xxx)  --> Stop using this timer slot.
+* n = getNumTimers()  --> Return the number of used slots in a timer object
+*
+* Define actions instead of calling function:
+* t_flash = timer.setTimeout(d, []() { digitalWrite(flash_Pin, LOW);  } );
+*/
 extern AppTimer timer     ; //  Timer object.
 extern int t_sensor       ; //  Timer to read sensor periodically.
 #if defined(remote_enable) || defined(local_enable)

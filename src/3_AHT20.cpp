@@ -15,7 +15,7 @@
 #ifdef AHT_sensor
 
   #if defined(Use_T_AHT) || defined(Use_H)
-    #include <Wire.h>
+    // #include <Wire.h>
     #include <AHT20.h>
   #endif
   #if defined(Use_P) || defined(Use_T_BMP)
