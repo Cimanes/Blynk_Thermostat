@@ -30,29 +30,32 @@
 */
 extern AppTimer timer     ; //  Timer object.
 extern int t_sensor       ; //  Timer to read sensor periodically.
+extern int t_clock        ; //  Timer for date & time refresh from Blynk or NTP.
+extern int t_screen       ; //  Timer screen refresh.
+
 #if defined(remote_enable) || defined(local_enable)
   extern int t_control    ; //  Timer for remote (Blynk) data retrieval and control.
 #endif
+
 #ifdef local_enable
   extern int t_local      ; //  Timer for local control (pushbuttons). 
   extern int t_resetAdjust; //  Timer to reset local adjustment flag.
 #endif
+
 #ifdef DHT_sensor
   extern int t_warmup     ; //  Timer to allow warmup after power up.
 #endif
-extern int t_clock        ; //  Timer for date & time refresh from Blynk or NTP.
-extern int t_screen       ; //  Timer screen refresh.
 
 //--------------------------------------------
 //  Timer intervals
 //--------------------------------------------
-constexpr unsigned long Dt_clock  = 120000UL; // 120 s
-constexpr unsigned long Dt_sensor = 15000UL; // 180 s
-constexpr unsigned long Dt_short  =   4000UL; // 4 s
+static constexpr unsigned long Dt_clock  = 120000UL; // 120 s
+static constexpr unsigned long Dt_sensor =  15000UL; // 180 s
+static constexpr unsigned long Dt_short  =   4000UL; // 4 s
 
 // time interval for local control (fixed, check for button pulses).
 #ifdef local_enable
-  constexpr unsigned long Dt_local =  500UL ; 
+  static constexpr unsigned long Dt_local =  500UL ; 
 #endif
 
 // Time delay to process thermostat control (dynamic, adjustable from Blynk) (60s).

@@ -26,11 +26,6 @@
 //--------------------------------------------
 
 #include "0_Global_Config.h"    // Options and globals
-// #ifdef remote_enable
-//   #include <Blynk/BlynkTimer.h>   // Use BlynkTimer when Blynk is enabled
-// #else
-//   #include <SimpleTimer.h>        // Use SimpleTimer when Blynk is not enabled
-// #endif
 
 #include "1_Timers.h"        // Define timers.
 
@@ -76,8 +71,11 @@ void setup() {
   #ifdef debug
     Serial.begin(115200);
   #endif
-  setup_sensor()        ;
-  
+
+  #if defined(Thermistor) || defined(DHT_sensor) || defined(BME_sensor) || defined(AHT_sensor)
+    setup_sensor()      ;
+  #endif
+
   #if defined(local_enable) || defined(remote_enable)
     setup_control()     ;
   #endif
@@ -100,12 +98,12 @@ void setup() {
 //  Loop
 //--------------------------------------------
 void loop() {
+  loop_timer()  ;
   #ifdef remote_enable
     loop_Blynk() ;
   #endif
-  loop_timer()  ;
 
-//************** Reconnect WiFi if connection is lost
+  //************** Reconnect WiFi if connection is lost
   #ifdef NTP_clock
     if (WiFi.status() != WL_CONNECTED)    reconnect_STA();
   #endif

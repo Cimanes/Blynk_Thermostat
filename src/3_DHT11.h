@@ -10,6 +10,7 @@
 // 70 = Sonoff Si7021 (Experimental, may not work properly)
 #define DHT_TYPE 11  
 
-void measure()      ;
-void read_sensor()  ;
+//--------------------------------------------
+//  Function prototypes
+//--------------------------------------------
 void setup_sensor() ;

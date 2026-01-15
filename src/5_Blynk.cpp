@@ -27,10 +27,10 @@
   //--------------------------------------------
   //  Variables
   //--------------------------------------------
-  const char auth[] = BLYNK_AUTH_TOKEN  ;
-  WidgetRTC rtc         ; // Blynk real time clock
-  static bool boiler   = 0 ; // Boiler state (0 = OFF, 1 = ON).
-  static bool sum_win  = 0 ; // Summer / Winter mode (1 = Winter, 0 = Summer).
+  static const char auth[] = BLYNK_AUTH_TOKEN  ;
+  WidgetRTC rtc             ; // Blynk real time clock
+  static bool boiler   = 0  ; // Boiler state (0 = OFF, 1 = ON).
+  static bool sum_win  = 0  ; // Summer / Winter mode (1 = Winter, 0 = Summer).
 
   #if defined(Cespedal) || defined(Toledo)
     #define vpin_temp V0      // Temperature reading.

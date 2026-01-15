@@ -1,10 +1,6 @@
 # pragma once
 
-
-
- 
 //--------------------------------------------
-//  Functions
+//  Function prototypes
 //--------------------------------------------
-void read_sensor();
 void setup_sensor();

@@ -7,6 +7,9 @@
  *  - If T_sp is set as T_max, the heater will remain ON, no matter what the actual temperature is
 */
 
+//--------------------------------------------
+//  Libraries
+//--------------------------------------------
 #include "0_Global_Config.h"    // Options and globals
 
 //--------------------------------------------
@@ -32,7 +35,3 @@
 //--------------------------------------------
 void setup_control();
 void thermostat();
-void local_adjust();
-void local_done();
-
-

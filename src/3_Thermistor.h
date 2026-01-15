@@ -1,4 +1,6 @@
 #pragma once
 
-void read_sensor();
+//--------------------------------------------
+//  Function prototypes
+//--------------------------------------------
 void setup_sensor() ;

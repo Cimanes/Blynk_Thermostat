@@ -1,7 +1,7 @@
+#pragma once
+
 /*
- *
  *  NOT CONFIGURED !!
- *
  * Connection of TFT screen with driver ST7789 or ST7735
  * Based on Adafruit libraries
  * Connection using SPI protocol
@@ -72,15 +72,6 @@ void digits(byte num){
 *********************************************************/
 
 //--------------------------------------------
-//  Libraries
-//--------------------------------------------
-#include <Adafruit_GFX.h>    // Core graphics library
-#include <Adafruit_ST7789.h> // Hardware-specific library for ST7789
-//#include <Adafruit_ST7735.h> // Hardware-specific library for ST7735
-#include <SPI.h>             // Arduino SPI library
-
-
-//--------------------------------------------
 //  Pin definitions
 //--------------------------------------------
 #define TFT_CS     15 // only used if the TFT display has CS pin
@@ -88,63 +79,7 @@ void digits(byte num){
 #define TFT_DC     2  // define data/command pin
 
 //--------------------------------------------
-//  Variables
+//  Function prototypes
 //--------------------------------------------
-// bool sync_screen  = 0 ;           // change from fast to slow refresh during boot up
-
-//--------------------------------------------
-//  Define my TFT (ST7789 or ST7735)
-//--------------------------------------------
-#if defined(TFT_ST7735)
-  Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
-#elif defined(TFT_ST7789)
-  Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
-#endif
-
-
-void refresh_screen() {
-  tft.fillScreen(ST77XX_BLACK)            ;
-  tft.setTextSize(3)                      ;
-  tft.setCursor(32, 10)                   ;
-  tft.setTextColor(ST77XX_WHITE)          ;
-  tft.setCursor(20, 50)                   ;
-  tft.setCursor(45, 50)                   ;
-  tft.print(Time)                         ;
-  tft.setCursor(160, 50)                  ;
-  tft.print(dow)                          ;
-  tft.setCursor(30, 100)                  ;
-  tft.setTextColor(ST77XX_RED)            ;
-  tft.print(F("T  "))                     ;
-  tft.print(T, 1)                         ;
-  tft.drawCircle(180, 105, 4, ST77XX_RED) ;   // Degree symbol ( ° )
-  tft.print(F("  C"))                     ;
-  tft.setCursor(10, 150)                  ;
-  tft.setTextColor(ST77XX_GREEN)          ;
-  tft.print(F("RH  "))                    ;
-  tft.print(H, 1)                         ;
-  tft.print(F("  %"))                     ;
-  tft.setCursor(10, 200)                  ;
-  tft.setTextColor(ST77XX_CYAN)           ;
-  tft.print(F("P "))                      ;
-  if (P < 1000)  tft.print(F(" "))        ;
-  tft.print(P, 1)                         ;
-  tft.print(F(" mbar"))                   ;
-
-  #ifdef debug
-    Serial.println(F("TFT done")) ;
-  #endif
-
-  // if (!sync_screen and sync_time) {
-  //   timer.deleteTimer(t_screen)        ;
-  //   sync_screen = 1                    ;
-  // }
-}
-
-void setup_screen() {
-  // if the display has CS pin try with SPI_MODE0
-  tft.init(240, 240, SPI_MODE2)                     ; // Init ST7789 display 240x240 pixel
-  tft.setRotation(2)                                ; // if the screen is flipped, remove this command
-  tft.setTextWrap(false)                            ;
-    t_screen = timer.setTimer(Dt_short, refresh_screen, 3) ; // Fast refresh during boot 3 times
-  Serial.println(F("Initialized"))                  ;
-}
+void refresh_screen();
+void setup_screen();

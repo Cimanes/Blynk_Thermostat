@@ -10,5 +10,4 @@
 //--------------------------------------------
 //Variables
 //--------------------------------------------
-void get_Date();  //  Receive data from NTP and process
 void setup_NTP();
