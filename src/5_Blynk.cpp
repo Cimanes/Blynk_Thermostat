@@ -15,10 +15,9 @@
   #include <BlynkSimpleEsp8266.h>
   #include <WidgetRTC.h>
 
-  #include "1_Timers.h"   // t_clock, Dt_clock, timer 
-  #include "3_BME280.h"   // T
+  #include "1_Timers.h"   // t_clock, Dt_clock, timer, t_control, Dt_update
   #include "4_OLED.h"     // refresh_screen()
-  #include "6_Control.h"  // local_adj heater, man_auto, man_command
+  #include "6_Control.h"  // local_adj, thermostat()
 
   #if defined(NTP_clock) && !defined(Blynk_clock)
     #include "2_NTPclock.h" // get_Date()
@@ -43,6 +42,7 @@
     // #define vpin_reset V7     //  Not used (reset using InternalPinDBG instead)
     #define vpin_period V8    // Control period (seconds).
     #define vpin_winter V9    // Summer / Winter operation mode 
+    #define vpin_screen V11    // Summer / Winter operation mode 
   #endif
 
   #ifdef Barrioscuro
@@ -56,6 +56,7 @@
     // #define vpin_reset V7     //  Not used (reset using InternalPinDBG instead)
     #define vpin_period V20    // Control period (seconds).
     #define vpin_winter V21    // Summer / Winter operation mode
+    #define vpin_screen V23    // Summer / Winter operation mode 
   #endif
 
   //--------------------------------------------
@@ -181,6 +182,18 @@
     #endif
   }
 
+
+  BLYNK_WRITE(vpin_screen)   {
+    screenON = param.asInt()      ;
+    #if defined(OLED_SSD1306) || defined(TFT_ST7735) || defined(TFT_ST7789)
+      refresh_screen()              ;
+    #endif
+    #ifdef debug
+      Serial.print(F(">OLED: "))    ;
+      Serial.println(screenON)    ;
+    #endif
+  }
+  
   BLYNK_WRITE(InternalPinDBG) {     // Internal pin = V255 -> used for special commands such as reboot device
     const char* cmd = param.asStr()                 ;
     if (strcmp(cmd, "reboot") == 0) {
@@ -257,13 +270,13 @@
       Blynk.syncVirtual(vpin_manrun)      ;
       Blynk.syncVirtual(vpin_boiler)      ;
       Blynk.syncVirtual(vpin_winter)      ;
-
+      Blynk.syncVirtual(vpin_screen)      ;
       #if defined(NTP_clock) || defined(Blynk_clock)
         get_Date()                          ;    
         Blynk.virtualWrite(vpin_time, Time) ;
       #endif
       Blynk.syncVirtual(vpin_period)      ; // Get control period from Blynk and start t_control (Dt_update) timer
-    }           
+    }
 
   //--------------------------------------------
   //  Setup

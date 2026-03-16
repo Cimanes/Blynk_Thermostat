@@ -97,6 +97,8 @@ void digits(byte num){
 
 
   void refresh_screen() {
+    tft.sendCommand(screenON ? ST7735_DISPON : ST7735_DISPOFF);
+    if (!screenON) return;
     tft.fillScreen(ST77XX_BLACK)            ;
     tft.setTextSize(3)                      ;
     tft.setCursor(32, 10)                   ;

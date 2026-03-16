@@ -17,14 +17,13 @@
 
   #include "1_Timers.h"
   #include "4_OLED.h"
-  #include "3_BME280.h"
 
   //--------------------------------------------
   //  Global Variables
   //--------------------------------------------
   #ifdef local_enable
-    bool local_adj  = 0   ; // Flag to indicate if user is manually adjusting setpoint
-    bool adjusting  = 0   ; // Flag to indicate local adjustment still ongoing.
+    bool local_adj  = 0         ; // Flag to indicate if user is manually adjusting setpoint
+    static bool adjusting  = 0  ; // Flag to indicate local adjustment still ongoing.
   #endif
 
   //--------------------------------------------

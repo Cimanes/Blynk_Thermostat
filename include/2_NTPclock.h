@@ -11,3 +11,4 @@
 //Variables
 //--------------------------------------------
 void setup_NTP();
+void get_Date();

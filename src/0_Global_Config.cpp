@@ -33,8 +33,9 @@ char Time[20]     ; // Formatted time (YYYY-MM-DD hh:mm).
 
 // ------------ Control Variables ------------
 #if defined(local_enable) || defined(remote_enable)
-  float T_sp       = 5  ; // Temperature setpoint for thermostat control (ºC).
-  bool heater      = 0  ; // D.O. to energyze / de-energize the heating relay (OFF = 0 / ON = 1).
-  bool man_auto    = 0  ; // Operation mode (Manual = 0; Auto = 1).
-  bool man_command = 0  ; // Heater command in manual mode.
+  float T_sp        = 5  ; // Temperature setpoint for thermostat control (ºC).
+  bool heater       = 0  ; // D.O. to energyze / de-energize the heating relay (OFF = 0 / ON = 1).
+  bool man_auto     = 0  ; // Operation mode (Manual = 0; Auto = 1).
+  bool man_command  = 0  ; // Heater command in manual mode.
+  bool screenON     = 1  ; // Enable / Disable the OLED display (OFF = 0 / ON = 1).
 #endif

@@ -3,7 +3,7 @@
  * Board connected to a display, a climate sensor and a relay.
  * The relay output activates the heating system.
  * Screen: choose TFT screen (ST7789 or ST7735) or OLED screen (SSD1306)
- * Sensor: choose DHT11 or BME280 or thermistor sensor.
+ * Sensor: choose DHT11 or BME280 or AHT20+BMP280 or thermistor sensor.
  * The library <dhtnew.h> is used to handle the DHT sensor.
  * The library <forcedClimate.h> is used to handle the BME sensor.
  * The library <SimpleTimer.h> is used to handle the timers for the periodic actions (sensing, control and remote update).

@@ -1,13 +1,11 @@
 #include "3_AHT20.h"
 /*
- * In this version we are using the library <dhtnew.h>, instead of the standard
- * library <DHT.h>.
- * Refer to https://github.com/RobTillaart/DHTNew
- * This library allows automatic sensortype recognition (DHT11 or DHT22)
- * It also allows to "powerDown" and "powerUp" the sensor when desired
- * Note: using auto-detect caused errors with DHT11. Recommended to set type explicitly.
+ * 
+ *    I2C communication, SDA & SCL:
+ *    SDA: GPIO4 = D2 (Wemos-D1-R2 or D1-mini) / D14 (Wemos D1-R1)
+ *    SCL: GPIO5 = D1 (Wemos-D1-R2 or D1-mini) / D15 (Wemos D1-R1)
+ * 
  */
-
 //--------------------------------------------
 //  Libraries
 //--------------------------------------------  
@@ -79,7 +77,8 @@
         fail = 0   ;
         #ifdef debug
           Serial.print(F("T> "));
-          Serial.print(T, 1); Serial.println(F(" *C"));
+          Serial.print(T, 1); 
+          Serial.println(F(" *C"));
         #endif
       }
     #endif
@@ -95,7 +94,8 @@
         fail = 0   ;
         #ifdef debug
           Serial.print(F("T> "));
-          Serial.print(T, 1); Serial.println(F(" *C"));
+          Serial.print(T, 1); 
+          Serial.println(F(" *C"));
         #endif
       }
     #endif
@@ -111,7 +111,8 @@
         // fail = 0   ;
         #ifdef debug
           Serial.print(F("H> "));
-          Serial.print(H, 1); Serial.println(F(" %"));
+          Serial.print(H, 1); 
+          Serial.println(F(" %"));
         #endif
       }
     #endif
@@ -127,7 +128,8 @@
         // fail = 0   ;
         #ifdef debug
           Serial.print(F("P> "));
-          Serial.print(P, 0); Serial.println(F(" mbar"));
+          Serial.print(P, 0); 
+          Serial.println(F(" mbar"));
         #endif
       }
     #endif

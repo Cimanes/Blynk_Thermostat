@@ -35,6 +35,9 @@
   //  Functions
   //--------------------------------------------
   void refresh_screen() {
+    OLED.ssd1306_command(screenON ? SSD1306_DISPLAYON : SSD1306_DISPLAYOFF);
+    if (!screenON) return;
+
     OLED.clearDisplay()             ; // Clear the buffer
     OLED.setTextSize(1)             ; // Text size
     OLED.setTextColor(SSD1306_WHITE); // Text color

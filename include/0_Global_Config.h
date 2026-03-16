@@ -24,9 +24,9 @@
 #define OLED_SSD1306
 
 //**** Choose the location for wifi credentials.
-#define Cespedal
+// #define Cespedal
 // #define Barrioscuro
-// #define Toledo
+#define Toledo
 
 //--------------------------------------------
 //  Global variables
@@ -62,4 +62,7 @@ extern char Time[20];
   extern bool man_command;
 #endif
 
-
+// ------------ Display Variables ------------
+#if defined(OLED_SSD1306) || defined(TFT_ST7735) || defined(TFT_ST7789)
+  extern bool screenON;
+#endif

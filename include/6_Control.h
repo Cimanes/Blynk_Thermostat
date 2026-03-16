@@ -17,8 +17,8 @@
 //--------------------------------------------
 #define pin_relay 12    // Wemos GPIO12 = D6 digital output pin to energize the relay.
 #ifdef local_enable
-  #define pin_lower  0  // Wemos GPIO2  = D4 pin to lower T_sp in Auto, or heater off in Man (embedded pull up, active low).
-  #define pin_raise  2  // Wemos GPIO0  = D3 pin to raise T_sp in Auto, or heater on in Man (embedded pull up, active low).
+  #define pin_lower  0  // Wemos GPIO0  = D3 pin to lower T_sp in Auto, or heater off in Man (embedded pull up, active low).
+  #define pin_raise  2  // Wemos GPIO2  = D4 pin to raise T_sp in Auto, or heater on in Man (embedded pull up, active low).
   #define pin_auto  15  // Wemos GPIO15 = D8 pin to change mode Manual/Auto. (embedded pull down, active high).
 #endif
 
@@ -27,7 +27,6 @@
 //--------------------------------------------
 #ifdef local_enable
   extern bool local_adj;
-  extern bool adjusting;
 #endif
 
 //--------------------------------------------

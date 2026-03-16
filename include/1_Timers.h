@@ -50,7 +50,7 @@ extern int t_screen       ; //  Timer screen refresh.
 //  Timer intervals
 //--------------------------------------------
 static constexpr unsigned long Dt_clock  = 120000UL; // 120 s
-static constexpr unsigned long Dt_sensor =  15000UL; // 180 s
+static constexpr unsigned long Dt_sensor = 120000UL; // 120 s
 static constexpr unsigned long Dt_short  =   4000UL; // 4 s
 
 // time interval for local control (fixed, check for button pulses).
