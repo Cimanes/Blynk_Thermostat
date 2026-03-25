@@ -6,7 +6,7 @@ Updated to use ".h" / ".cpp" files
 ### Components
 The board is connected to a display, a climate sensor and a relay.
   - The relay output activates the heating system (boiler).
-  - Screen: choose TFT (ST7789 or ST7735) or OLED (SSD1306).
+  - Screen: choose TFT (ST7789 or ST7735) or OLED (SSD1306). (TFT not finished yet)
   - Sensor: choose DHT11 or BME280 or thermistor or AHT+BMP280.
   - Clock synchronization: choose NTP server or Blynk clock. 
   
@@ -14,11 +14,13 @@ The board is connected to a display, a climate sensor and a relay.
   (optional): Retrieve time and date from a webserver using NTPclient library.
   (optional): serial printer for debug and troubleshooting.  
   
-  Retrieve temperature (and RH& if applicable) from the DHT / BME sensor / thermistor.
+  Retrieve temperature (and RH& if applicable) from the DHT / BME sensor / thermistor / AHT+BMP.
   Display data on the screen.
   Send a digital output to operate the relay.
   The user can choose "Manual operation" (force ON / OFF) or "Auto operation" (heater ON when temperature below setpoint).
   The user can change the temperature setpoint.
+  The user can adjust the update interval.
+  The user can switch the screen ON/OFF.
 
 ### Libraries  
   - The library <dhtnew.h> is used to handle the DHT sensor: (https://github.com/RobTillaart/DHTNew)

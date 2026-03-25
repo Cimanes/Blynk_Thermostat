@@ -1,4 +1,9 @@
-#include "5_Blynk.h"
+/*
+ * Device sends data to the App  -->  Blynk.virtualWrite(pin, value)
+ * Process data received from the App  -->  BLYNK_WRITE(Vpin) { ... }
+ */
+
+ #include "5_Blynk.h"
 
 //--------------------------------------------
 //  Libraries
@@ -8,9 +13,12 @@
 #ifdef remote_enable
   #ifdef ARDUINO_ARCH_ESP32
     #include <WiFi.h>
-  #endif
-  #ifdef ARDUINO_ARCH_ESP8266
+    #include <HTTPUpdate.h>         // Required for OTA
+    #include <WiFiClientSecure.h>   // Required for OTA 
+  #elif defined(ARDUINO_ARCH_ESP8266)
     #include <ESP8266WiFi.h> 
+    #include <ESP8266httpUpdate.h>  // Required for OTA
+    #include <ESP8266HTTPClient.h>  // Required for OTA
   #endif
   #include <BlynkSimpleEsp8266.h>
   #include <WidgetRTC.h>
@@ -53,7 +61,7 @@
     #define vpin_manrun V16    // Manual ON / Manual OFF command
     #define vpin_time V17      // Time feedback (from last connection)
     #define vpin_boiler V18    // Boiler power ON / OFF (1 = ON).
-    // #define vpin_reset V7     //  Not used (reset using InternalPinDBG instead)
+    // #define vpin_reset V19     //  Not used (reset using InternalPinDBG instead)
     #define vpin_period V20    // Control period (seconds).
     #define vpin_winter V21    // Summer / Winter operation mode
     #define vpin_screen V23    // Summer / Winter operation mode 
@@ -105,12 +113,13 @@
       if (local_adj) return       ; // Ignore remote changes when local adjustment ongoing.
     #endif
     T_sp = param.asFloat()        ;
+    if(t_control >= 0 ) timer.restartTimer(t_control) ; // Restart control timer
+    timer.setTimeout(2000, control_Blynk)             ; // Force update
     #if defined(OLED_SSD1306) || defined(TFT_ST7735) || defined(TFT_ST7789)
       refresh_screen()            ;
     #endif
     #ifdef debug
-      Serial.print(F(">T_sp: ")) ;
-      Serial.println(T_sp)        ;
+      Serial.print(F(">T_sp: ")) ;  Serial.println(T_sp)        ;
     #endif
   }
 
@@ -120,12 +129,13 @@
       if (local_adj) return       ; // Ignore remote changes when local adjustment ongoing.
     #endif
     man_auto = param.asInt()      ;
+    if(t_control >= 0 ) timer.restartTimer(t_control) ; // Restart control timer
+    timer.setTimeout(2000, control_Blynk)             ; // Force update
     #if defined(OLED_SSD1306) || defined(TFT_ST7735) || defined(TFT_ST7789)
       refresh_screen()            ;
     #endif
     #ifdef debug
-      Serial.print(F(">Auto: ")) ;
-      Serial.println(man_auto)    ;
+      Serial.print(F(">Auto: ")) ;  Serial.println(man_auto)    ;
     #endif
   }
 
@@ -135,39 +145,38 @@
       if (local_adj) return         ; // Ignore remote changes when local adjustment ongoing.
     #endif
     man_command = param.asInt()     ;
+    if(t_control >= 0 ) timer.restartTimer(t_control) ; // Restart control timer
+    timer.setTimeout(2000, control_Blynk)             ; // Force update
     #if defined(OLED_SSD1306) || defined(TFT_ST7735) || defined(TFT_ST7789)
       refresh_screen()              ;
     #endif
     #ifdef debug
-      Serial.print(F(">Man_cmd: "));
-      Serial.println(man_command)   ;
+      Serial.print(F(">Man_cmd: "));  Serial.println(man_command)   ;
     #endif
   }
 
-  BLYNK_WRITE(vpin_boiler)   {
+  BLYNK_WRITE(vpin_boiler) {
     if(boiler == param.asInt()) return ; // No change
     boiler = param.asInt()          ;
     #if defined(OLED_SSD1306) || defined(TFT_ST7735) || defined(TFT_ST7789)
       refresh_screen()              ;
     #endif
     #ifdef debug
-      Serial.print(F(">Boiler: ")) ;
-      Serial.println(boiler)        ;
+      Serial.print(F(">Boiler: ")) ;  Serial.println(boiler)        ;
     #endif
   }
 
-  BLYNK_WRITE(vpin_period) {               // Moved to control loop
-    if(Dt_update == param.asInt()*1000) return ; // No change
-
-    Dt_update = param.asInt()*1000      ;  // Convert to milliseconds.
+  BLYNK_WRITE(vpin_period) {
+    if(Dt_update == param.asInt()*1000) return  ; // No change
+    Dt_update = param.asInt()*1000 ;         // -> milliseconds.
     #if defined(OLED_SSD1306) || defined(TFT_ST7735) || defined(TFT_ST7789)
-      refresh_screen()                  ;
+      refresh_screen()             ;
     #endif
-    if(t_control >= 0 ) timer.deleteTimer(t_control);
-    t_control = timer.setInterval(Dt_update, control_Blynk)  ; // Update control period
+    if(t_control >= 0 ) timer.deleteTimer(t_control)        ;
+    timer.setTimeout(2000, control_Blynk)                   ; // Force update
+    t_control = timer.setInterval(Dt_update, control_Blynk) ; // Update control period
     #ifdef debug
-      Serial.print(F(">Period: "))      ;
-      Serial.println(Dt_update / 1000)  ;
+        Serial.print(F(">Period: ")); Serial.println(Dt_update / 1000)  ;
     #endif
   }
 
@@ -177,8 +186,7 @@
       refresh_screen()              ;
     #endif
     #ifdef debug
-      Serial.print(F(">Sum_Win: "));
-      Serial.println(sum_win)       ;
+      Serial.print(F(">Sum_Win: "));  Serial.println(sum_win)       ;
     #endif
   }
 
@@ -189,8 +197,7 @@
       refresh_screen()              ;
     #endif
     #ifdef debug
-      Serial.print(F(">OLED: "))    ;
-      Serial.println(screenON)    ;
+      Serial.print(F(">OLED: ")); Serial.println(screenON)    ;
     #endif
   }
   
@@ -205,6 +212,37 @@
     }
   }
 
+  BLYNK_WRITE(InternalPinOTA) {     // Internal pin = V256 -> used for OTA updates
+    String otaurl = param.asString();
+    
+    Serial.print(F("OTA from URL: "));
+    Serial.println(otaurl);
+    
+    // 1. Create wifi client and result returned by httpUpdate
+    WiFiClient client;
+    t_httpUpdate_return ret;
+    // 2. Run update using client and URL
+    #ifdef ARDUINO_ARCH_ESP8266
+      ret = ESPhttpUpdate.update(client, otaurl);
+    #elif defined(ARDUINO_ARCH_ESP8266)
+      ret = httpUpdate.update(client, otaurl);
+    #endif
+    switch (ret) {
+      case HTTP_UPDATE_FAILED:
+        #ifdef ARDUINO_ARCH_ESP8266
+          Serial.printf_P(PSTR("Update failed (%d): %s\n"), ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
+        #else
+          Serial.printf_P(PSTR("Update failed (%d): %s\n"), httpUpdate.getLastError(), httpUpdate.getLastErrorString().c_str());
+        #endif
+        break;
+      case HTTP_UPDATE_NO_UPDATES:
+        Serial.println(F("Update not available"));
+        break;
+      case HTTP_UPDATE_OK:
+        Serial.println(F("Update OK"));
+        break;
+    }
+  }
 
   //--------------------------------------------
   //  RTC from blynk
@@ -213,7 +251,7 @@
     // Obtain date and time from Blynk RTC and format it into Time[]
     void get_Date() {
       // using sprintf (slower method):
-      // sprintf(Time,"%04d-%02d-%02d / %02d:%02d", year(), month(), day(), hour(), minute());
+      // sprintf(Time,"%02d:%02d / %02d-%02d-%04d", hour(), minute(), day(), month(), year() );
 
       // using direct char manipulation (faster method):
       const int yr = year();
@@ -223,24 +261,24 @@
       const byte mm = minute(); 
       
       // "'0' +" converts int to char: '0' = ASCII 48. So '0' + 1 = ASCII 49 = char '1'
-      Time[0] = '0' + (yr / 1000) % 10;
-      Time[1] = '0' + (yr / 100)  % 10;
-      Time[2] = '0' + (yr / 10)   % 10;
-      Time[3] = '0' + (yr % 10);
-      Time[4] = '-';
-      Time[5] = '0' + (mo / 10);
-      Time[6] = '0' + (mo % 10);
-      Time[7] = '-';
+      Time[0] = '0' + (hh / 10);
+      Time[1] = '0' + (hh % 10);
+      Time[2] = ':';
+      Time[3] = '0' + (mm / 10);
+      Time[4] = '0' + (mm % 10);
+      Time[5] = ' ';
+      Time[6] = '/';
+      Time[7] = ' ';
       Time[8]  = '0' + (dy / 10);
       Time[9]  = '0' + (dy % 10);
-      Time[10] = ' ';
-      Time[11] = '/';
-      Time[12] = ' ';
-      Time[13] = '0' + (hh / 10);
-      Time[14] = '0' + (hh % 10);
-      Time[15] = ':';
-      Time[16] = '0' + (mm / 10);
-      Time[17] = '0' + (mm % 10);
+      Time[10] = '-';
+      Time[11] = '0' + (mo / 10);
+      Time[12] = '0' + (mo % 10);
+      Time[13] = '-';
+      Time[14] = '0' + (yr / 1000) % 10;
+      Time[15] = '0' + (yr / 100)  % 10;
+      Time[16] = '0' + (yr / 10)   % 10;
+      Time[17] = '0' + (yr % 10);
       Time[18] = '\0';
 
       #ifdef debug
@@ -286,9 +324,9 @@
     rtc.begin()                   ; // Start RTC widget
     setSyncInterval(3600)         ; // re-synch every hour
     if(t_control < 0) t_control = timer.setInterval(Dt_update, control_Blynk)  ; // Start control timer
-  // Option: you could specify server:
-  // Blynk.begin(auth, ssid, pass, "blynk.cloud", 80);
-  // Blynk.begin(auth, ssid, pass, IPAddress(192,168,1,100), 8080);
+    // Option: you could specify server:
+    // Blynk.begin(auth, ssid, pass, "blynk.cloud", 80);
+    // Blynk.begin(auth, ssid, pass, IPAddress(192,168,1,100), 8080);
   }
 
   void loop_Blynk() {  Blynk.run(); }

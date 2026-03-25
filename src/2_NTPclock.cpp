@@ -53,24 +53,25 @@
     //  const char *monthName = months[mo-1] ;
     //  const byte DST = tm.tm_isdst         ;  // Daylight Saving Time flag
 
-    Time[0] = '0' + (yr / 1000) % 10;
-    Time[1] = '0' + (yr / 100)  % 10;
-    Time[2] = '0' + (yr / 10)   % 10;
-    Time[3] = '0' + (yr % 10);
-    Time[4] = '-';
-    Time[5] = '0' + (mo / 10);
-    Time[6] = '0' + (mo % 10);
-    Time[7] = '-';
+    // "'0' +" converts int to char: '0' = ASCII 48. So '0' + 1 = ASCII 49 = char '1'
+    Time[0] = '0' + (hh / 10);
+    Time[1] = '0' + (hh % 10);
+    Time[2] = ':';
+    Time[3] = '0' + (mm / 10);
+    Time[4] = '0' + (mm % 10);
+    Time[5] = ' ';
+    Time[6] = '/';
+    Time[7] = ' ';
     Time[8]  = '0' + (dy / 10);
     Time[9]  = '0' + (dy % 10);
-    Time[10] = ' ';
-    Time[11] = '/';
-    Time[12] = ' ';
-    Time[13] = '0' + (hh / 10);
-    Time[14] = '0' + (hh % 10);
-    Time[15] = ':';
-    Time[16] = '0' + (mm / 10);
-    Time[17] = '0' + (mm % 10);
+    Time[10] = '-';
+    Time[11] = '0' + (mo / 10);
+    Time[12] = '0' + (mo % 10);
+    Time[13] = '-';
+    Time[14] = '0' + (yr / 1000) % 10;
+    Time[15] = '0' + (yr / 100)  % 10;
+    Time[16] = '0' + (yr / 10)   % 10;
+    Time[17] = '0' + (yr % 10);
     Time[18] = '\0';
 
       #ifdef debug

@@ -4,7 +4,7 @@
 //  Options
 //--------------------------------------------
 // Attribute to place functions in Flash memory
-#define debug         //  Uncomment to allow serial print debug.
+// #define debug         //  Uncomment to allow serial print debug.
 #define remote_enable //  Uncomment to enable remote operation(Blynk).
 #define local_enable  //  Uncomment to enable local operation (push-buttons).
 
@@ -13,10 +13,10 @@
 // #define NTP_clock   //  Uncomment to enable NTP Clock refresh.
 
 //**** Choose the temperature sensor (Thermistor, DHT11 or BME280).
-// #define Thermistor
+#define Thermistor
 // #define DHT_sensor
 // #define BME_sensor
-#define AHT_sensor
+// #define AHT_sensor
 
 //**** Choose display type.
 //#define TFT_ST7789
@@ -24,9 +24,9 @@
 #define OLED_SSD1306
 
 //**** Choose the location for wifi credentials.
-// #define Cespedal
+#define Cespedal
 // #define Barrioscuro
-#define Toledo
+// #define Toledo
 
 //--------------------------------------------
 //  Global variables
