@@ -141,7 +141,7 @@ void digits(byte num){
     tft.init(240, 240, SPI_MODE2)                     ; // Init ST7789 display 240x240 pixel
     tft.setRotation(2)                                ; // if the screen is flipped, remove this command
     tft.setTextWrap(false)                            ;
-      t_screen = timer.setTimer(Dt_short, refresh_screen, 3) ; // Fast refresh during boot 3 times
+      t_screen = timer.setTimer(Dt_short, refresh_screen, 2) ; // Fast refresh during boot 3 times
     Serial.println(F("Initialized"))                  ;
   }
 #endif

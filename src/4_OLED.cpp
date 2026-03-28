@@ -89,7 +89,7 @@
     }
     else Serial.println(F("OLED initialized"))    ;
     OLED.display()                                ;
-    t_screen = timer.setTimer(Dt_short, refresh_screen, 3) ; // Fast refresh during boot 3 times
+    t_screen = timer.setTimer(Dt_short, refresh_screen, 2) ; // Fast refresh during boot 2 times
   }
 
 #endif // OLED_SSD1306

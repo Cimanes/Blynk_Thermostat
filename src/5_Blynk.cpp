@@ -142,13 +142,13 @@
   BLYNK_WRITE(vpin_manrun) {
     if(man_command == param.asInt()) return ; // No change
     #ifdef local_enable
-      if (local_adj) return         ; // Ignore remote changes when local adjustment ongoing.
+      if (local_adj) return       ; // Ignore remote changes when local adjustment ongoing.
     #endif
-    man_command = param.asInt()     ;
+    man_command = param.asInt()   ;
     if(t_control >= 0 ) timer.restartTimer(t_control) ; // Restart control timer
     timer.setTimeout(2000, control_Blynk)             ; // Force update
     #if defined(OLED_SSD1306) || defined(TFT_ST7735) || defined(TFT_ST7789)
-      refresh_screen()              ;
+      refresh_screen()            ;
     #endif
     #ifdef debug
       Serial.print(F(">Man_cmd: "));  Serial.println(man_command)   ;
@@ -157,9 +157,9 @@
 
   BLYNK_WRITE(vpin_boiler) {
     if(boiler == param.asInt()) return ; // No change
-    boiler = param.asInt()          ;
+    boiler = param.asInt()        ;
     #if defined(OLED_SSD1306) || defined(TFT_ST7735) || defined(TFT_ST7789)
-      refresh_screen()              ;
+      refresh_screen()            ;
     #endif
     #ifdef debug
       Serial.print(F(">Boiler: ")) ;  Serial.println(boiler)        ;
@@ -180,10 +180,10 @@
     #endif
   }
 
-  BLYNK_WRITE(vpin_winter)   {
-    sum_win = param.asInt()         ;
+  BLYNK_WRITE(vpin_winter) {
+    sum_win = param.asInt()       ;
     #if defined(OLED_SSD1306) || defined(TFT_ST7735) || defined(TFT_ST7789)
-      refresh_screen()              ;
+      refresh_screen()            ;
     #endif
     #ifdef debug
       Serial.print(F(">Sum_Win: "));  Serial.println(sum_win)       ;
@@ -191,10 +191,10 @@
   }
 
 
-  BLYNK_WRITE(vpin_screen)   {
+  BLYNK_WRITE(vpin_screen) {
     screenON = param.asInt()      ;
     #if defined(OLED_SSD1306) || defined(TFT_ST7735) || defined(TFT_ST7789)
-      refresh_screen()              ;
+      refresh_screen()            ;
     #endif
     #ifdef debug
       Serial.print(F(">OLED: ")); Serial.println(screenON)    ;

@@ -22,7 +22,7 @@
   //  Global Variables
   //--------------------------------------------
   #ifdef local_enable
-    bool local_adj  = 0         ; // Flag to indicate if user is manually adjusting setpoint
+    bool local_adj  = 0         ; // Flag to indicate local adjustment present.
     static bool adjusting  = 0  ; // Flag to indicate local adjustment still ongoing.
   #endif
 
@@ -59,8 +59,12 @@
   //--------------------------------------------
   #ifdef local_enable
     void local_done() {
-      thermostat()                      ; // Perform control action after local adjustment
-      timer.enable(t_control)           ; // Re-enable periodic control
+      thermostat()            ; // Perform control action after local adjustment
+      timer.enable(t_control) ; // Re-enable periodic control
+      #if defined(OLED_SSD1306) || defined(TFT_ST7735) || defined(TFT_ST7789)
+        screenON = 0          ;
+        refresh_screen()      ;
+      #endif
       #ifdef debug
         Serial.println(F("Local done")) ;
       #endif
@@ -79,15 +83,27 @@
      */
     void local_adjust() {
       //--------------------------------------------
-      //  Check for no local action
+      //  Check for NO local action
       //--------------------------------------------
       if (!digitalRead(pin_auto) && digitalRead(pin_raise) && digitalRead(pin_lower)) {
         if (adjusting) {
-          t_resetAdjust = timer.setTimeout(Dt_short, local_done); // Reset "adjusting" flag after 5s of no local action
+          t_resetAdjust = timer.setTimeout(Dt_short, local_done); // Reset "adjusting" flag after 6s of no local action
           adjusting = 0 ;
         }
         return;
       }
+      
+      //--------------------------------------------
+      //  Push button while display is off -> turn display on
+      //--------------------------------------------
+      #if defined(OLED_SSD1306) || defined(TFT_ST7735) || defined(TFT_ST7789)
+        if(!screenON) {       // If display is off, turn it on
+          screenON = 1;
+          if (!adjusting) adjusting = 1   ; // Flag local adjustment ongoing.
+          refresh_screen();
+          return;
+        }
+      #endif
 
       #ifdef debug
         Serial.println(F("Local btn"))  ;

@@ -14,7 +14,7 @@
 //--------------------------------------------
 //  Global Variables
 //--------------------------------------------
-char Time[20]     ; // Formatted time (YYYY-MM-DD hh:mm).
+char Time[20] ;   // Formatted time (hh:mm / DD-MM-YYYY).
 
 // ------------ Sensor Variables ------------
 #if defined (Thermistor) || defined(DHT_sensor) || defined(BME_sensor) || defined(AHT_sensor)
@@ -37,5 +37,5 @@ char Time[20]     ; // Formatted time (YYYY-MM-DD hh:mm).
   bool heater       = 0  ; // D.O. to energyze / de-energize the heating relay (OFF = 0 / ON = 1).
   bool man_auto     = 0  ; // Operation mode (Manual = 0; Auto = 1).
   bool man_command  = 0  ; // Heater command in manual mode.
-  bool screenON     = 1  ; // Enable / Disable the OLED display (OFF = 0 / ON = 1).
+  bool screenON     = 0  ; // Enable / Disable the OLED display (OFF = 0 / ON = 1).
 #endif
